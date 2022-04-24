@@ -2,7 +2,7 @@
 
 void prepareFolder(string &folder)
 {
-	cout << "preparing folder: " << folder << endl;
+	//cout << "preparing folder: " << folder << endl;
 	if (filesystem::exists(folder))
 	{
 		filesystem::remove_all(folder);

@@ -89,12 +89,12 @@ bool Config::parseCommandLine(int argc, char **argv)
 				{
 					vector<string> tmp;
 					splitString(optarg_str, tmp, '_');
-					cout << tmp[0] << " " << tmp[1] << " " << tmp[2] << endl;	
+					// cout << tmp[0] << " " << tmp[1] << " " << tmp[2] << endl;	
 				
 					problemIndex = atoi(tmp[0].c_str());
 					k = atoi(tmp[1].c_str());
 					s = atoi(tmp[2].c_str());
-					cout << problemIndex << endl;
+					// cout << problemIndex << endl;
 				}
 				
 			}

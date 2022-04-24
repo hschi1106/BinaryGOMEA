@@ -9,7 +9,7 @@ int main(int argc, char **argv)
     Config *config = new Config();
     config->parseCommandLine(argc, argv);
     config->checkOptions();
-    config->printOverview();
+    //config->printOverview(); // toggle on if you want annoying output that fills entire terminal everytime :)
 
     config->rng.seed(config->randomSeed);
 

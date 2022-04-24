@@ -439,6 +439,7 @@ void PopulationGeneral::updateElitistAndCheckVTR(Individual *solution)
     {
       writeElitistSolutionToFile(config->folder, sharedInformationPointer->elitistSolutionHittingTimeEvaluations, sharedInformationPointer->elitistSolutionHittingTimeMilliseconds, solution);
       cout << "VTR HIT!\n";
+      cout << sharedInformationPointer->elitistSolutionHittingTimeEvaluations << "\n";
       throw customException("vtr");
     }
   

@@ -147,6 +147,10 @@ double concatenatedDeceptiveTrap::calculateFitness(Individual *solution)
 			res += deceptiveTrap(unitation, k);
 		else if (bimodal)
 			res += bimodalDeceptiveTrap(unitation, k);
+
+		// LEADING
+		/*if(unitation != k)
+		    break;*/
 	}
 
 	solution->fitness = res;

@@ -33,7 +33,7 @@ public:
 class oneMax:public Problem
 {
 public:
-	oneMax(){cout<<"creating oneMax\n";}
+	oneMax(){/*cout<<"creating oneMax\n";*/}
 	void initializeProblem(int numberOfVariables_)
 	{
 		numberOfVariables = numberOfVariables_;
@@ -51,7 +51,8 @@ public:
 	concatenatedDeceptiveTrap(int k_, int s_, bool bimodal_): k(k_), s(s_), bimodal(bimodal_)
 	{
 		if (not bimodal_)
-			cout<<"creating concatenated Deceptive Trap with trap size=" << k << " and shift=" << s << endl;
+			int i;
+			//cout<<"creating concatenated Deceptive Trap with trap size=" << k << " and shift=" << s << endl;
 		else
 		{
 			if (k != 10 && k != 6)
@@ -59,7 +60,7 @@ public:
 				cout << "Bimodal trap with k=" << k << " not implemented!" << endl;
 				exit(0);
 			}
-			cout<<"creating bimodal concatenated Deceptive Trap with trap size=" << k << " and shift=" << s << endl;
+			// cout<<"creating bimodal concatenated Deceptive Trap with trap size=" << k << " and shift=" << s << endl;
 		}
 	}
 	void initializeProblem(int numberOfVariables_);
@@ -82,7 +83,7 @@ class ADF:public Problem
 public:
 	ADF(string problemInstanceFilename_): problemInstanceFilename(problemInstanceFilename_)
 	{
-		cout<<"creating ADF\n";
+		//cout<<"creating ADF\n";
 	}
 
 	void initializeProblem(int numberOfVariables_);
@@ -98,7 +99,7 @@ class hierarchialDeceptiveTrap:public Problem
 public:
 	hierarchialDeceptiveTrap(int k_): k(k_)
 	{
-		cout<<"creating hierarchialDeceptiveTrap\n";
+		//cout<<"creating hierarchialDeceptiveTrap\n";
 	}
 
 	void initializeProblem(int numberOfVariables_)
@@ -122,7 +123,7 @@ class hierarchialIfAndOnlyIf:public Problem
 public:
 	hierarchialIfAndOnlyIf()
 	{
-		cout<<"creating hierarchialIfAndOnlyIf\n";
+		//cout<<"creating hierarchialIfAndOnlyIf\n";
 	}
 	void initializeProblem(int numberOfVariables_)
 	{
@@ -146,7 +147,7 @@ class maxCut:public Problem
 public:
 	maxCut(string problemInstanceFilename_): problemInstanceFilename(problemInstanceFilename_)
 	{
-		cout<<"creating maxCut\n";
+		//cout<<"creating maxCut\n";
 	}
 	void initializeProblem(int numberOfVariables_);
 	double calculateFitness(Individual *solution);
@@ -158,7 +159,7 @@ class leadingOnes:public Problem
 public:
 	leadingOnes()
 	{
-		cout<<"creating leadingOnes\n";
+		//cout<<"creating leadingOnes\n";
 	}
 	void initializeProblem(int numberOfVariables_)
 	{
@@ -179,7 +180,7 @@ class Clustering:public Problem
 public:
 	Clustering(string problemInstanceFilename_): problemInstanceFilename(problemInstanceFilename_)
 	{
-		cout<<"creating Clustering\n";
+		//cout<<"creating Clustering\n";
 	}
 	void initializeProblem(int numberOfVariables_);
 	double calculateFitness(Individual *solution);
@@ -196,7 +197,7 @@ class MAXSAT:public Problem
 public:
 	MAXSAT(string problemInstanceFilename_): problemInstanceFilename(problemInstanceFilename_)
 	{
-		cout<<"creating MAXSAT\n";
+		//cout<<"creating MAXSAT\n";
 	}
 
 	void initializeProblem(int numberOfVariables_);
@@ -214,7 +215,7 @@ class SpinGlass:public Problem
 public:
 	SpinGlass(string problemInstanceFilename_): problemInstanceFilename(problemInstanceFilename_)
 	{
-		cout<<"creating SpinGlass\n";
+		//cout<<"creating SpinGlass\n";
 	}
 
 	void initializeProblem(int numberOfVariables_);	

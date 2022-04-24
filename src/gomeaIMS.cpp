@@ -5,6 +5,8 @@ using namespace std;
 #include "gomeaIMS.hpp"
 #include "utils.hpp"
 
+//#define DEBUG
+
 gomeaIMS::gomeaIMS(Config *config_): GOMEA(config_)
 {
   prepareFolder(config->folder);
@@ -128,9 +130,13 @@ void gomeaIMS::GOMEAGenerationalStepAllGOMEAsRecursiveFold(int GOMEAIndexSmalles
         GOMEAs[GOMEAIndex]->copyOffspringToPopulation();
 
         GOMEAs[GOMEAIndex]->calculateAverageFitness();
-        double fitness_after = sharedInformationInstance->elitist.fitness;
-        //cout <<  GOMEAIndex << " " << GOMEAs[GOMEAIndex]->numberOfGenerations << " " << sharedInformationInstance->numberOfEvaluations << " " << GOMEAs[GOMEAIndex]->population.size() << " " << GOMEAs[GOMEAIndex]->averageFitness << endl;
-        if (config->populationScheme==0 && sharedInformationInstance->numberOfEvaluations >= 100000000)
+        
+	double fitness_after = sharedInformationInstance->elitist.fitness;
+        
+	// prints summary after every generation
+	//cout <<  GOMEAIndex << " " << GOMEAs[GOMEAIndex]->numberOfGenerations << " " << sharedInformationInstance->numberOfEvaluations << " " << GOMEAs[GOMEAIndex]->population.size() << " " << GOMEAs[GOMEAIndex]->averageFitness << endl;
+        
+	if (config->populationScheme==0 && sharedInformationInstance->numberOfEvaluations >= 100000000)
         {
          cout << "10^8 evals reached! Terminating...\n";
          GOMEAs[GOMEAIndex]->terminated = true;
@@ -138,7 +144,10 @@ void gomeaIMS::GOMEAGenerationalStepAllGOMEAsRecursiveFold(int GOMEAIndexSmalles
         GOMEAs[GOMEAIndex]->numberOfGenerations++;
 
         if (GOMEAs[GOMEAIndex]->numberOfGenerations >= config->maxGenerations)
-          GOMEAs[GOMEAIndex]->terminated = true;
+	{
+         cout << config->maxGenerations << " gens reached! Terminating...\n";
+	 GOMEAs[GOMEAIndex]->terminated = true;
+	}
       }
     }
 
@@ -170,7 +179,7 @@ bool gomeaIMS::checkTerminationGOMEA(int GOMEAIndex)
     }
   }
 
-//cout << "CONVERGED!\n";
+  cout << "CONVERGED!\n";
           
 
   return true;
