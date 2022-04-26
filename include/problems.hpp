@@ -22,6 +22,7 @@ class Problem
 public:
 	int numberOfVariables;
 	int usePartialEvaluations;
+	double vtr;
 	
 	Problem(){};
 	virtual ~Problem(){};

@@ -22,6 +22,10 @@ void createProblemInstance(int problemIndex, int numberOfVariables, Config *conf
 		};
 	}
 	(*problemInstance)->initializeProblem(numberOfVariables);
+
+	if(problemIndex == 9){
+		config->vtr = (*problemInstance)->vtr; 
+	}
 }
 
 bool problemNameByIndex(Config *config, string &problemName)
@@ -667,9 +671,14 @@ void SpinGlass::initializeProblem(int numberOfVariables_)
 		exit(0);
 	}
 	
-	double tmp1, tmp2;
-	inFile >> tmp1 >> tmp2;
+	// double tmp1, tmp2;
+	// inFile >> tmp1 >> tmp2;
+	double tmp1;
+	inFile >> tmp1;
 	
+	inFile >> vtr;
+	vtr *= -1;
+
 	while(true)
 	{
 		vector<int> subfunction;
@@ -687,9 +696,10 @@ void SpinGlass::initializeProblem(int numberOfVariables_)
 		subfunctionsForVariable[var1].push_back(subfunctions.size());
 		subfunctionsForVariable[var2].push_back(subfunctions.size());		
 		subfunctions.push_back(subfunction);
-		//cout << subfunction.size() << " " << var1 << " " << var2 << " " << sign << endl;
+		// cout << subfunction.size() << " " << var1 << " " << var2 << " " << sign << endl;
 		
 	}
+
 	inFile.close();
 };
 
