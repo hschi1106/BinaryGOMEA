@@ -23,7 +23,7 @@ void createProblemInstance(int problemIndex, int numberOfVariables, Config *conf
 	}
 	(*problemInstance)->initializeProblem(numberOfVariables);
 
-	if(problemIndex == 9){
+	if(problemIndex == 9 ||problemIndex == 2){
 		config->vtr = (*problemInstance)->vtr; 
 	}
 }
@@ -204,39 +204,42 @@ void ADF::initializeProblem(int numberOfVariables_)
 		cout << "Problem Instance File " << problemInstanceFilename << " does not exist!\n";
 		exit(0);
 	}
-	int N, numFunctions;
-	inFile >> N >> numFunctions;
-	//cout << N << " " << numFunctions << endl;
+	int N, k, s, numFunctions;
+	inFile >> N >> k >> s;
+	k++;
+	numFunctions =  (N + s -1)/s;
 
 	for (int i = 0; i < numFunctions; ++i)
 	{
 		NKSubfunction subfunction;
 
-		int k;
-		inFile >> k;
+		// int k;
+		// inFile >> k;
 
 		for (int j = 0; j < k; ++j)
 		{
-			int var;
-			inFile >> var;
+			int var = i*s+j;
+			if(var >= N)
+				break;
 			subfunction.variablesPositions.push_back(var);
 		}
+
 		int numCombinations = 1 << k;
 		subfunction.valuesTable.resize(numCombinations);
 		for (int j = 0; j < numCombinations; ++j)
 		{
-			string combination;
-			inFile >> combination;
-			int index = 0, pow = 1;
-			for (size_t p = combination.size()-1; p > 0; p--)
-			{
-				if (combination[p] == '0' || combination[p] == '1')
-				{
-					index += ((int)(combination[p] == '1') * pow);
-					pow *= 2;
-				}
-			}
-			inFile >> subfunction.valuesTable[index];			
+			// string combination;
+			// inFile >> combination;
+			// int index = 0, pow = 1;
+			// for (size_t p = combination.size()-1; p > 0; p--)
+			// {
+			// 	if (combination[p] == '0' || combination[p] == '1')
+			// 	{
+			// 		index += ((int)(combination[p] == '1') * pow);
+			// 		pow *= 2;
+			// 	}
+			// }
+			inFile >> subfunction.valuesTable[j];			
 
 		}
 		subfunctions.push_back(subfunction);
@@ -250,6 +253,8 @@ void ADF::initializeProblem(int numberOfVariables_)
 		//VIG.push_back(subfunction.variablesPositions);
 
 	}
+
+	inFile >> vtr;
 	inFile.close();
 };
 
