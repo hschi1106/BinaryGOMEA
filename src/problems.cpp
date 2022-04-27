@@ -24,8 +24,10 @@ void createProblemInstance(int problemIndex, int numberOfVariables, Config *conf
 	(*problemInstance)->initializeProblem(numberOfVariables);
 
 	if(problemIndex == 9 ||problemIndex == 2){
-		config->vtr = (*problemInstance)->vtr; 
+		config->vtr = (*problemInstance)->vtr;
 	}
+	else if(problemIndex == 8)
+		config->vtr = 0;
 }
 
 bool problemNameByIndex(Config *config, string &problemName)
