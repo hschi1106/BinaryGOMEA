@@ -22,6 +22,33 @@ bool Config::isNumber(const string &str)
 	return !str.empty() && all_of(str.begin(), str.end(), ::isdigit);
 }
 
+bool Config::parseEnv(){ // called after parseCommandLine
+    char* env_inst_num, *env_shift;
+    int ell = numberOfVariables;
+    env_inst_num = getenv("GOMEA_INSTANCE_NUMBER");
+    if(env_inst_num){
+        switch(problemIndex){
+	    case 2: // nk
+		env_shift = getenv("GOMEA_NK_SHIFT");
+		if(!env_shift){
+		    cout << "Missing GOMEA_NK_SHIFT from env\n";
+		    exit(-1);
+		}
+		problemInstancePath = "NK_Instance/pnk" + to_string(ell) + "_4_" + string(env_shift) + "_" + string(env_inst_num);
+		break;
+	    case 3: // maxcut
+		break;
+	    case 8: // sat
+		problemInstancePath = "SAT/uf" + to_string(ell) + "/uf" + to_string(ell) + "-0" + string(env_inst_num) + ".cnf";
+		break;
+	    case 9: // spin
+		problemInstancePath = "SPIN/" + to_string(ell) + "/" + to_string(ell) + "_" + string(env_inst_num);
+		break;
+	}
+    }
+    return true;    
+}
+
 bool Config::parseCommandLine(int argc, char **argv)
 {
   const struct option longopts[] =

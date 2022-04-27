@@ -57,6 +57,7 @@ public:
 	mt19937 rng;
 
 	bool parseCommandLine(int argc, char **argv);
+	bool parseEnv();
 	void checkOptions();
 	void printUsage();
 	void printOverview();

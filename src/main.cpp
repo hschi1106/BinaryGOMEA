@@ -8,6 +8,7 @@ int main(int argc, char **argv)
 {
     Config *config = new Config();
     config->parseCommandLine(argc, argv);
+    config->parseEnv();
     config->checkOptions();
     //config->printOverview(); // toggle on if you want annoying output that fills entire terminal everytime :)
 
