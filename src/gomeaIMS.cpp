@@ -4,11 +4,15 @@ using namespace std;
 
 #include "gomeaIMS.hpp"
 #include "utils.hpp"
+#include <sys/types.h>
+#include <unistd.h>
 
 //#define DEBUG
 
 gomeaIMS::gomeaIMS(Config *config_): GOMEA(config_)
 {
+  pid_t pid = getpid();
+  config->folder = "dumps/" + to_string(pid);
   prepareFolder(config->folder);
   initElitistFile(config->folder, config->populationScheme, config->populationSize);
 
