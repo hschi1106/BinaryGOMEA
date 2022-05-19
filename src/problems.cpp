@@ -23,7 +23,7 @@ void createProblemInstance(int problemIndex, int numberOfVariables, Config *conf
 	}
 	(*problemInstance)->initializeProblem(numberOfVariables);
 
-	if(problemIndex == 9 ||problemIndex == 2){
+	if(problemIndex == 9 ||problemIndex == 2 || problemIndex == 3){
 		config->vtr = (*problemInstance)->vtr;
 	}
 	else if(problemIndex == 8)
@@ -425,7 +425,7 @@ void maxCut::initializeProblem(int numberOfVariables_)
 	int N, numEdges;
 	inFile >> N >> numEdges;
 
-	//cout << problemInstanceFilename << " " << N << "  " << numEdges << endl;
+	// cout << problemInstanceFilename << " " << N << "  " << numEdges << endl;
 
 	for (int i = 0; i < numEdges; ++i)
 	{
@@ -433,12 +433,27 @@ void maxCut::initializeProblem(int numberOfVariables_)
 		double w;
 		inFile >> v1 >> v2 >> w;
 		edges.push_back(make_pair(make_pair(v1-1, v2-1), w));
-		//cout << v1 << " " << v2 << " " << w << endl;
+		// cout << v1 << " " << v2 << " " << w << endl;
 		edgesForVariable[v1-1].push_back(i);
 		edgesForVariable[v2-1].push_back(i);		
 	}
 
 	inFile.close();
+
+	string solutionInstanceFilename = problemInstanceFilename;
+	size_t found = solutionInstanceFilename.find("w");
+	solutionInstanceFilename.insert(found, "g_");
+	found = solutionInstanceFilename.find("w", found+3);
+	solutionInstanceFilename.insert(found, "g_");
+	
+	ifstream inFile_s(solutionInstanceFilename, ifstream::in);
+	if (inFile_s.fail())
+	{
+		cout << "Problem Instance Solution File " << solutionInstanceFilename << " does not exist!\n";
+		exit(0);
+	}
+	inFile_s >> vtr;
+	inFile_s.close();
 }
 
 double maxCut::calculateFitness(Individual *solution)
