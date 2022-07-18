@@ -435,7 +435,7 @@ void PopulationGeneral::updateElitistAndCheckVTR(Individual *solution)
     //cout << ":" << sharedInformationPointer->elitist.fitness << endl;
 
     /* Check the VTR */
-    if (solution->fitness >= config->vtr)
+    if (solution->fitness >= config->vtr - 10e-8)
     {
       writeElitistSolutionToFile(config->folder, sharedInformationPointer->elitistSolutionHittingTimeEvaluations, sharedInformationPointer->elitistSolutionHittingTimeMilliseconds, solution);
       cout << "VTR HIT!\n";
