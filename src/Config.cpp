@@ -37,6 +37,7 @@ bool Config::parseEnv(){ // called after parseCommandLine
 		problemInstancePath = "NK_Instance/pnk" + to_string(ell) + "_4_" + string(env_shift) + "_" + string(env_inst_num);
 		break;
 	    case 3: // maxcut
+	    problemInstancePath = "MAXCUT/w05_" + to_string(ell) + "/w05_" + to_string(ell) + "." + string(env_inst_num);
 		break;
 	    case 8: // sat
 		problemInstancePath = "SAT/uf" + to_string(ell) + "/uf" + to_string(ell) + "-0" + string(env_inst_num) + ".cnf";
