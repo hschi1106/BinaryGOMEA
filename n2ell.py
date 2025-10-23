@@ -3,7 +3,7 @@ import subprocess, sys
 from functools import lru_cache
 
 TRIALS = 10    # continuous success times to count as success
-START_POP = 10
+START_POP = 5
 MAX_POP = None  # no upper limit
 
 def run_gomea_once(ell: int, pop: int, vtr: int, timeout: int | None = None) -> tuple[int, str, str]:
