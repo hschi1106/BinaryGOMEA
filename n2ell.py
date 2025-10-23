@@ -1,6 +1,9 @@
 import numpy as np
 import subprocess, sys
 from functools import lru_cache
+import concurrent.futures as cf
+import os
+import pandas as pd
 
 TRIALS = 10    # continuous success times to count as success
 START_POP = 5
@@ -98,19 +101,36 @@ def binary_search_min_pop(ell: int, vtr: int, lo: int, hi: int) -> int:
             lo = mid
     return hi
 
+def solve_one_ell(ell: int):
+    vtr = ell * 6 // 5
+    lo, hi = bracket_interval(ell, vtr, START_POP, MAX_POP)
+    if hi is None:
+        return (ell, None, lo, None)
+    min_ok = binary_search_min_pop(ell, vtr, lo, hi)
+    return (ell, min_ok, lo, hi)
+
 if __name__ == "__main__":
-    ells = np.arange(5, 401, 5, dtype=int)
-    print(ells, flush=True)
+    ells = np.arange(5, 405, 5, dtype=int)
 
-    for ell in ells:
-        vtr = ell * 6 // 5
-        print(f"\n=== ELL={ell}, VTR={vtr} ===", flush=True)
+    MAX_WORKERS = min(len(ells), os.cpu_count() or 4)
+    print(f"Using MAX_WORKERS={MAX_WORKERS}")
 
-        lo, hi = bracket_interval(ell, vtr, START_POP, MAX_POP)
+    results = []
+    with cf.ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futs = {ex.submit(solve_one_ell, int(ell)): int(ell) for ell in ells}
+        for fut in cf.as_completed(futs):
+            ell = futs[fut]
+            try:
+                ell, min_ok, lo, hi = fut.result()
+                if min_ok is None:
+                    print(f"[FAIL] ELL={ell}: last_fail={lo}, max_pop={MAX_POP}")
+                else:
+                    print(f"[RESULT] ELL={ell} min POP={min_ok} (lower={lo}, upper={hi})")
+                results.append((ell, min_ok, lo, hi))
+            except Exception as e:
+                print(f"[ERROR] ELL={ell}: {e}")
 
-        if hi is None:
-            print(f"[FAIL] unable to solve under the limit: ELL={ell}, last_fail={lo}, max_pop={MAX_POP}", flush=True)
-            continue
-
-        min_ok = binary_search_min_pop(ell, vtr, lo, hi)
-        print(f"[RESULT] ELL={ell} min POP={min_ok} (lower bound={lo}、upper bound={hi})", flush=True)
+    results.sort(key=lambda x: x[0])
+    # Save to CSV
+    df = pd.DataFrame(results, columns=["ELL", "Min_POP", "Last_Fail", "First_Success"])
+    df.to_csv("n2ell_results.csv", index=False)
