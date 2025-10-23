@@ -8,6 +8,7 @@ import pandas as pd
 TRIALS = 10    # continuous success times to count as success
 START_POP = 5
 MAX_POP = None  # no upper limit
+MAX_BS_STEPS = 5
 
 def run_gomea_once(ell: int, pop: int, vtr: int, timeout: int | None = None) -> tuple[int, str, str]:
     """run GOMEA once, return (returncode, stdout, stderr); do not raise exceptions."""
@@ -88,17 +89,23 @@ def bracket_interval(ell: int, vtr: int, start_pop: int, max_pop: int | None):
             probe *= 2
         return lo, hi
 
-def binary_search_min_pop(ell: int, vtr: int, lo: int, hi: int) -> int:
+def binary_search_min_pop(ell: int, vtr: int, lo: int, hi: int, max_steps: int | None = None) -> int:
     """
     binary search to find the minimal pop in (lo, hi) that succeeds.
     guarantee: check_success(lo)==False (or lo==0 as failure), check_success(hi)==True.
+    If max_steps is hit, return current hi (best-known success).
     """
+    steps = 0
     while lo + 1 < hi:
+        if max_steps is not None and steps >= max_steps:
+            # print(f"[BS-LIMIT] ELL={ell}: reached max_steps={max_steps}, return upper bound {hi}", flush=True)
+            return hi  
         mid = (lo + hi) // 2
         if check_success(ell, mid, vtr):
             hi = mid
         else:
             lo = mid
+        steps += 1
     return hi
 
 def solve_one_ell(ell: int):
@@ -106,7 +113,7 @@ def solve_one_ell(ell: int):
     lo, hi = bracket_interval(ell, vtr, START_POP, MAX_POP)
     if hi is None:
         return (ell, None, lo, None)
-    min_ok = binary_search_min_pop(ell, vtr, lo, hi)
+    min_ok = binary_search_min_pop(ell, vtr, lo, hi, max_steps=MAX_BS_STEPS)
     return (ell, min_ok, lo, hi)
 
 if __name__ == "__main__":
