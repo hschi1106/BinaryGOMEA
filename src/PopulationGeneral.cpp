@@ -437,13 +437,13 @@ void PopulationGeneral::updateElitistAndCheckVTR(Individual *solution)
     /* Check the VTR */
     if (solution->fitness >= config->vtr - 10e-8)
     {
-      writeElitistSolutionToFile(config->folder, sharedInformationPointer->elitistSolutionHittingTimeEvaluations, sharedInformationPointer->elitistSolutionHittingTimeMilliseconds, solution);
-      cout << "VTR HIT!\n";
-      cout << sharedInformationPointer->elitistSolutionHittingTimeEvaluations << "\n";
+      // writeElitistSolutionToFile(config->folder, sharedInformationPointer->elitistSolutionHittingTimeEvaluations, sharedInformationPointer->elitistSolutionHittingTimeMilliseconds, solution);
+      cout << "VTR HIT! " << populationSize << " " << numberOfGenerations << " " << sharedInformationPointer->numberOfEvaluations << " " << getMilliSecondsRunningSinceTimeStamp(sharedInformationPointer->startTimeMilliseconds) << "\n";
+      // cout << sharedInformationPointer->elitistSolutionHittingTimeEvaluations << "\n";
       throw customException("vtr");
     }
   
-    writeElitistSolutionToFile(config->folder, sharedInformationPointer->elitistSolutionHittingTimeEvaluations, sharedInformationPointer->elitistSolutionHittingTimeMilliseconds, solution);
+    // writeElitistSolutionToFile(config->folder, sharedInformationPointer->elitistSolutionHittingTimeEvaluations, sharedInformationPointer->elitistSolutionHittingTimeMilliseconds, solution);
   }
 
   sharedInformationPointer->firstEvaluationEver = false;
