@@ -7,8 +7,8 @@ import pandas as pd
 
 TRIALS = 10    # continuous success times to count as success
 START_POP = 5
-MAX_POP = None  # no upper limit
-MAX_BS_STEPS = 5
+MAX_POP = 1000000
+MAX_BS_STEPS = None
 
 def run_gomea_once(ell: int, pop: int, vtr: int, timeout: int | None = None) -> tuple[int, str, str]:
     """run GOMEA once, return (returncode, stdout, stderr); do not raise exceptions."""
@@ -117,9 +117,10 @@ def solve_one_ell(ell: int):
     return (ell, min_ok, lo, hi)
 
 if __name__ == "__main__":
-    ells = np.arange(5, 405, 5, dtype=int)
+    ells = np.arange(205, 305, 5, dtype=int)
 
-    MAX_WORKERS = min(len(ells), os.cpu_count() or 4)
+    # MAX_WORKERS = min(len(ells), os.cpu_count() or 4)
+    MAX_WORKERS = 12
     print(f"Using MAX_WORKERS={MAX_WORKERS}")
 
     results = []
