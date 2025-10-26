@@ -4,7 +4,9 @@ from functools import lru_cache
 import concurrent.futures as cf
 import os
 import pandas as pd
+import random
 
+TRYS = 50      # total runs to test
 TRIALS = 10    # continuous success times to count as success
 START_POP = 5
 MAX_POP = 1000000
@@ -20,6 +22,7 @@ def run_gomea_once(ell: int, pop: int, vtr: int, timeout: int | None = None) -> 
         "--time", "10000",
         "--FOS", "1",
         "--vtr", str(vtr),
+        "--seed", str(random.randint(1, 1000000)),
     ]
     try:
         r = subprocess.run(
@@ -36,16 +39,21 @@ def _hit_vtr(stdout: str, stderr: str) -> bool:
 
 @lru_cache(maxsize=None)
 def check_success(ell: int, pop: int, vtr: int) -> bool:
-    """test whether a certain pop size succeeds TRIALS times in a row (i.e., hits 'VTR HIT!')."""
+    """test whether a certain pop size continuously succeeds TRIALS times in TRYS times (i.e., hits 'VTR HIT!')."""
     success = 0
-    for i in range(TRIALS):
+    for i in range(TRYS):
         rc, out, err = run_gomea_once(ell, pop, vtr, timeout=None)
         ok = _hit_vtr(out, err)
         if not ok:
             if rc != 0:
                 print(f"[WARN] ELL={ell} POP={pop} run#{i+1} rc={rc}", file=sys.stderr, flush=True)
             return False
+            success = 0
         success += 1
+        if success >= TRIALS:
+            break
+        if (TRYS - i - 1 + success) < TRIALS:
+            return False
     return True
 
 def bracket_interval(ell: int, vtr: int, start_pop: int, max_pop: int | None):
@@ -75,10 +83,10 @@ def bracket_interval(ell: int, vtr: int, start_pop: int, max_pop: int | None):
             return 0, hi
         return lo, hi
     else:
-        # double until success
+        # plus 100 until success
         lo = start_pop
         hi = None
-        probe = start_pop * 2
+        probe = start_pop + 100
         while True:
             if max_pop is not None and probe > max_pop:
                 return lo, None
@@ -86,7 +94,7 @@ def bracket_interval(ell: int, vtr: int, start_pop: int, max_pop: int | None):
                 hi = probe
                 break
             lo = probe
-            probe *= 2
+            probe += 100
         return lo, hi
 
 def binary_search_min_pop(ell: int, vtr: int, lo: int, hi: int, max_steps: int | None = None) -> int:
@@ -117,7 +125,7 @@ def solve_one_ell(ell: int):
     return (ell, min_ok, lo, hi)
 
 if __name__ == "__main__":
-    ells = np.arange(205, 305, 5, dtype=int)
+    ells = np.arange(5, 20, 5, dtype=int)
 
     # MAX_WORKERS = min(len(ells), os.cpu_count() or 4)
     MAX_WORKERS = 12
