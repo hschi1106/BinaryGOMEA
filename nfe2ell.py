@@ -4,6 +4,7 @@ import pandas as pd
 import concurrent.futures as cf
 from functools import lru_cache
 from decimal import Decimal, InvalidOperation
+from tqdm import tqdm
 
 # =======================
 # 可調參數
@@ -163,25 +164,29 @@ def solve_one_ell(ell: int) -> tuple[int, int | None, int, int | None, int | Non
     return (ell, min_ok, lo, hi, min_nfe)
 
 if __name__ == "__main__":
-    ells = np.arange(5, 50, 5, dtype=int)
+    ells = np.arange(5, 40, 5, dtype=int)
 
     workers = MAX_WORKERS
     print(f"Using MAX_WORKERS={workers}")
 
     results: list[tuple[int, int | None, int, int | None, int | None]] = []
-    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+    with cf.ThreadPoolExecutor(max_workers=workers) as ex, tqdm(
+        total=len(ells), desc="Solving ELLs", dynamic_ncols=True
+    ) as pbar:
         futs = {ex.submit(solve_one_ell, int(ell)): int(ell) for ell in ells}
         for fut in cf.as_completed(futs):
             ell = futs[fut]
             try:
                 ell, min_ok, lo, hi, min_nfe = fut.result()
                 if min_ok is None:
-                    print(f"[FAIL]  ELL={ell}: last_fail={lo}, max_pop={MAX_POP}")
+                    tqdm.write(f"[FAIL]  ELL={ell}: last_fail={lo}, max_pop={MAX_POP}")
                 else:
-                    print(f"[RESULT] ELL={ell}, min POP={min_ok} (lower={lo}, upper={hi}), avg NFE={min_nfe}")
+                    tqdm.write(f"[RESULT] ELL={ell}, min POP={min_ok} (lower={lo}, upper={hi}), avg NFE={min_nfe}")
                 results.append((ell, min_ok, lo, hi, min_nfe))
             except Exception as e:
-                print(f"[ERROR] ELL={ell}: {e}", file=sys.stderr, flush=True)
+                tqdm.write(f"[ERROR] ELL={ell}: {e}")
+            finally:
+                pbar.update(1)
 
     results.sort(key=lambda x: x[0])
     df = pd.DataFrame(results, columns=["ell", "min_n", "Last_Fail", "First_Success", "avg_nfe"])
