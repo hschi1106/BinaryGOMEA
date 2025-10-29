@@ -11,9 +11,9 @@ from tqdm import tqdm
 # =======================
 TRYS = 50            # 最多嘗試次數
 TRIALS = 10          # 需要連續成功的次數
-START_POP = 5
+START_POP = 5000
 MAX_POP = 1_000_000  # 上限保險桿
-BRACKET_STEP = 100   # 起始往上探測步長（線性增加）
+BRACKET_STEP = 1000   # 起始往上探測步長（線性增加）
 MAX_BS_STEPS = None  # 二分上限步數；None 表示不限
 MAX_WORKERS = 12     # 外層跨 ell 併發
 # =======================
@@ -164,7 +164,7 @@ def solve_one_ell(ell: int) -> tuple[int, int | None, int, int | None, int | Non
     return (ell, min_ok, lo, hi, min_nfe)
 
 if __name__ == "__main__":
-    ells = np.arange(5, 40, 5, dtype=int)
+    ells = np.arange(255, 305, 5, dtype=int)
 
     workers = MAX_WORKERS
     print(f"Using MAX_WORKERS={workers}")
